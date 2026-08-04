@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import API from '../api';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -14,6 +15,10 @@ function Login() {
       setMessage(res.data.message || 'Login successful!');
       if (res.data.access_token) {
         localStorage.setItem('token', res.data.access_token);
+        // Login success hote hi Dashboard par bhejein
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 1000);
       }
     } catch (err) {
       setMessage(err.response?.data?.detail || 'Login failed');
