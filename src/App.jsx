@@ -2,11 +2,23 @@ import React, { useState } from "react";
 import Chat from "./Chat";
 
 export default function App() {
-  const [view, setView] = useState("landing"); // 'landing', 'login', 'signup', 'pending', 'chat'
+  const [view, setView] = useState("landing"); // 'landing', 'login', 'signup', 'pending', 'chat', 'admin'
   const [formData, setFormData] = useState({ username: "", email: "", password: "" });
   const [currentUser, setCurrentUser] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Admin Security Password
+  const ADMIN_EMAIL = "admin@conection.com";
+  const ADMIN_PASSWORD = "Admin@1234";
+
+  // Admin Members State
+  const [activeTab, setActiveTab] = useState("Approved"); // 'Pending', 'Approved', 'Rejected'
+  const [members, setMembers] = useState([
+    { id: 1, name: "Mihika", email: "mihika@gmail.com", status: "Approved" },
+    { id: 2, name: "Shubh", email: "shubh786vaishnav@gmail.com", status: "Approved" },
+    { id: 3, name: "Aruna", email: "aruna@gmail.com", status: "Pending" }
+  ]);
 
   const BACKEND_URL = "https://chat-connect-frontend-s5tp.onrender.com";
 
@@ -18,6 +30,20 @@ export default function App() {
     e.preventDefault();
     setMessage("");
     setIsLoading(true);
+
+    const inputEmail = formData.email.trim().toLowerCase();
+
+    // Admin Verification Check
+    if (!isSignup && inputEmail === ADMIN_EMAIL) {
+      setIsLoading(false);
+      if (formData.password === ADMIN_PASSWORD) {
+        setCurrentUser("Admin");
+        setView("admin");
+      } else {
+        setMessage("Galat Password! Admin login ke liye sahi password dalein.");
+      }
+      return;
+    }
 
     const endpoint = isSignup ? "/signup" : "/login";
 
@@ -47,32 +73,164 @@ export default function App() {
       }
     } catch (err) {
       setIsLoading(false);
-      // Fallback
+      // Fallback for regular user
       setCurrentUser(formData.username || "User");
       setView("chat");
     }
   };
 
+  // Member Action Handlers
+  const handleUpdateStatus = (id, newStatus) => {
+    setMembers(members.map(m => m.id === id ? { ...m, status: newStatus } : m));
+  };
+
+  // Stats calculation
+  const pendingCount = members.filter(m => m.status === "Pending").length;
+  const approvedCount = members.filter(m => m.status === "Approved").length;
+  const rejectedCount = members.filter(m => m.status === "Rejected").length;
+
+  // 1. Chat Room View (User & Admin)
   if (view === "chat") {
     return (
       <div style={{ backgroundColor: "#FAF8F5", minHeight: "100vh", padding: "20px 10px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", maxWidth: "600px", margin: "0 auto 15px" }}>
           <span style={{ fontFamily: "Georgia, serif", fontSize: "22px", fontWeight: "bold", color: "#0F172A" }}>Conection.</span>
-          <button 
-            onClick={() => setView("landing")} 
-            style={{ padding: "8px 18px", backgroundColor: "#0F172A", color: "#fff", border: "none", borderRadius: "20px", cursor: "pointer", fontSize: "13px", fontWeight: "500" }}
-          >
-            Logout
-          </button>
+          <div style={{ display: "flex", gap: "10px" }}>
+            {currentUser === "Admin" && (
+              <button 
+                onClick={() => setView("admin")} 
+                style={{ padding: "8px 16px", backgroundColor: "#334155", color: "#fff", border: "none", borderRadius: "20px", cursor: "pointer", fontSize: "13px" }}
+              >
+                Admin Panel
+              </button>
+            )}
+            <button 
+              onClick={() => setView("landing")} 
+              style={{ padding: "8px 18px", backgroundColor: "#0F172A", color: "#fff", border: "none", borderRadius: "20px", cursor: "pointer", fontSize: "13px" }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
         <Chat username={currentUser} />
       </div>
     );
   }
 
+  // 2. Admin Dashboard View
+  if (view === "admin") {
+    const filteredMembers = members.filter(m => m.status === activeTab);
+
+    return (
+      <div style={styles.pageWrapper}>
+        <header style={styles.adminHeader}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <span style={styles.logo}>Conection.</span>
+              <span style={{ fontSize: "14px", color: "#64748B" }}>Admin</span>
+            </div>
+            <p style={{ fontSize: "13px", color: "#64748B", margin: "4px 0 0 0" }}>
+              Signed in as <strong style={{ color: "#0F172A" }}>admin@conection.com</strong>
+            </p>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <button 
+              onClick={() => setView("chat")} 
+              style={{ padding: "8px 16px", backgroundColor: "#0F172A", color: "#fff", border: "none", borderRadius: "20px", cursor: "pointer", fontSize: "13px" }}
+            >
+              Open Chat Room 💬
+            </button>
+            <button 
+              onClick={() => setView("landing")} 
+              style={{ padding: "8px 16px", backgroundColor: "#FFF", border: "1px solid #CBD5E1", borderRadius: "20px", cursor: "pointer", fontSize: "13px", color: "#0F172A" }}
+            >
+              Log out
+            </button>
+          </div>
+        </header>
+
+        <main style={{ maxWidth: "600px", margin: "30px auto 0", padding: "0 20px" }}>
+          <div style={styles.statsGrid}>
+            <div>
+              <div style={styles.statLabel}>PENDING</div>
+              <div style={styles.statNumber}>{pendingCount}</div>
+            </div>
+            <div>
+              <div style={styles.statLabel}>APPROVED</div>
+              <div style={styles.statNumber}>{approvedCount}</div>
+            </div>
+            <div>
+              <div style={styles.statLabel}>REJECTED</div>
+              <div style={styles.statNumber}>{rejectedCount}</div>
+            </div>
+          </div>
+
+          <div style={{ marginTop: "40px" }}>
+            <div style={styles.statLabel}>MEMBERS</div>
+            <h2 style={styles.adminTitle}>Who joins the room.</h2>
+          </div>
+
+          <div style={styles.tabsContainer}>
+            {["Pending", "Approved", "Rejected"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                style={{
+                  ...styles.tabButton,
+                  borderBottom: activeTab === tab ? "2px solid #0F172A" : "2px solid transparent",
+                  color: activeTab === tab ? "#0F172A" : "#64748B",
+                  fontWeight: activeTab === tab ? "600" : "400",
+                }}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginTop: "20px" }}>
+            {filteredMembers.length === 0 ? (
+              <p style={{ color: "#64748B", fontSize: "14px" }}>No members in {activeTab}.</p>
+            ) : (
+              filteredMembers.map((member) => {
+                const initials = member.name.substring(0, 2).toUpperCase();
+                return (
+                  <div key={member.id} style={styles.memberRow}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                      <div style={styles.avatarDark}>{initials}</div>
+                      <div>
+                        <div style={{ fontWeight: "600", fontSize: "15px", color: "#0F172A" }}>{member.name}</div>
+                        <div style={{ fontSize: "13px", color: "#64748B" }}>{member.email}</div>
+                      </div>
+                    </div>
+
+                    <div>
+                      {activeTab === "Pending" && (
+                        <div style={{ display: "flex", gap: "12px" }}>
+                          <button onClick={() => handleUpdateStatus(member.id, "Approved")} style={styles.approveBtn}>Approve</button>
+                          <button onClick={() => handleUpdateStatus(member.id, "Rejected")} style={styles.revokeBtn}>Reject</button>
+                        </div>
+                      )}
+                      {activeTab === "Approved" && (
+                        <button onClick={() => handleUpdateStatus(member.id, "Rejected")} style={styles.revokeBtn}>Revoke</button>
+                      )}
+                      {activeTab === "Rejected" && (
+                        <button onClick={() => handleUpdateStatus(member.id, "Approved")} style={styles.approveBtn}>Approve</button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // 3. Landing Page View
   return (
     <div style={styles.pageWrapper}>
-      {/* Top Navbar */}
       <header style={styles.navbar}>
         <div style={styles.logo} onClick={() => setView("landing")}>Conection.</div>
         <div style={styles.navLinks}>
@@ -85,7 +243,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* Login / Signup / Pending Modal */}
       {(view === "login" || view === "signup" || view === "pending") && (
         <div style={styles.modalOverlay}>
           <div style={styles.modalCard}>
@@ -170,10 +327,8 @@ export default function App() {
         </div>
       )}
 
-      {/* Main Responsive Landing Section */}
       <main style={styles.mainContent}>
         <div style={styles.heroGrid}>
-          {/* Left Column: Heading & CTAs */}
           <div style={styles.heroTextContainer}>
             <div style={styles.subTag}>A QUIETER PLACE TO CHAT</div>
             
@@ -197,11 +352,10 @@ export default function App() {
             </div>
           </div>
 
-          {/* Right Column: Interactive Preview Card */}
           <div style={styles.heroCardContainer}>
             <div style={styles.previewCard}>
               <div style={styles.chatHeader}>
-                <div style={styles.avatar}>AS</div>
+                <div style={styles.avatarDark}>AS</div>
                 <div>
                   <div style={{ fontWeight: "600", fontSize: "15px", color: "#0F172A" }}>Ananya S.</div>
                   <div style={{ fontSize: "12px", color: "#16A34A", fontWeight: "500" }}>online now</div>
@@ -214,39 +368,6 @@ export default function App() {
                 <div style={styles.msgLeft}>6 baje?</div>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Features Grid (Horizontal on Laptop, Stacked on Mobile) */}
-        <div style={styles.featuresGrid}>
-          <div style={styles.featureItem}>
-            <div style={styles.iconBox}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
-            <h3 style={styles.featureTitle}>Invite only</h3>
-            <p style={styles.featureText}>
-              Every new member is reviewed by the admin. Your room stays small, calm, and trusted.
-            </p>
-          </div>
-
-          <div style={styles.featureItem}>
-            <div style={styles.iconBox}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            </div>
-            <h3 style={styles.featureTitle}>Find people, fast</h3>
-            <p style={styles.featureText}>
-              Search by name or email and open a conversation in a single click. No friends list drama.
-            </p>
-          </div>
-
-          <div style={styles.featureItem}>
-            <div style={styles.iconBox}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </div>
-            <h3 style={styles.featureTitle}>Real-time, forever</h3>
-            <p style={styles.featureText}>
-              Messages arrive instantly and stay saved. Come back later — your history is exactly where you left it.
-            </p>
           </div>
         </div>
       </main>
@@ -270,6 +391,15 @@ const styles = {
     maxWidth: "1100px",
     margin: "0 auto",
   },
+  adminHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "20px 32px",
+    maxWidth: "1100px",
+    margin: "0 auto",
+    borderBottom: "1px solid #E2E8F0",
+  },
   logo: {
     fontFamily: "Georgia, serif",
     fontSize: "26px",
@@ -289,7 +419,6 @@ const styles = {
     fontSize: "15px",
     cursor: "pointer",
     padding: "8px 12px",
-    fontWeight: "500",
   },
   primaryBtnSmall: {
     backgroundColor: "#0F172A",
@@ -312,7 +441,6 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     gap: "40px",
-    marginBottom: "80px",
   },
   heroTextContainer: {
     flex: "1 1 480px",
@@ -332,7 +460,7 @@ const styles = {
     borderBottom: "1px solid #CBD5E1",
     display: "inline-block",
     paddingBottom: "4px",
-    marginBottom: "24px",
+    marginBottom: "20px",
   },
   mainTitle: {
     fontFamily: "Georgia, serif",
@@ -352,7 +480,6 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: "24px",
-    flexWrap: "wrap",
   },
   primaryBtnLarge: {
     backgroundColor: "#0F172A",
@@ -363,9 +490,6 @@ const styles = {
     fontSize: "16px",
     fontWeight: "500",
     cursor: "pointer",
-    display: "inline-flex",
-    justifyContent: "center",
-    alignItems: "center",
   },
   textLinkBtn: {
     background: "none",
@@ -373,15 +497,13 @@ const styles = {
     color: "#0F172A",
     fontSize: "15px",
     cursor: "pointer",
-    padding: "5px 0",
     textDecoration: "underline",
-    fontWeight: "500",
   },
   previewCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: "20px",
     padding: "24px",
-    boxShadow: "0 20px 30px -10px rgba(0, 0, 0, 0.07), 0 10px 15px -5px rgba(0, 0, 0, 0.03)",
+    boxShadow: "0 20px 30px -10px rgba(0, 0, 0, 0.07)",
     border: "1px solid #F1F5F9",
   },
   chatHeader: {
@@ -392,7 +514,7 @@ const styles = {
     borderBottom: "1px solid #F1F5F9",
     marginBottom: "18px",
   },
-  avatar: {
+  avatarDark: {
     width: "44px",
     height: "44px",
     borderRadius: "50%",
@@ -429,43 +551,69 @@ const styles = {
     maxWidth: "80%",
     fontSize: "14px",
   },
-  featuresGrid: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "40px",
-    borderTop: "1px solid #E2E8F0",
-    paddingTop: "60px",
-    justifyContent: "space-between",
+  statsGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: "20px",
+    paddingBottom: "20px",
   },
-  featureItem: {
-    flex: "1 1 280px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
+  statLabel: {
+    fontSize: "11px",
+    letterSpacing: "1.5px",
+    color: "#64748B",
+    fontWeight: "600",
+    borderBottom: "1px solid #CBD5E1",
+    display: "inline-block",
+    paddingBottom: "4px",
+    marginBottom: "8px",
   },
-  iconBox: {
-    width: "42px",
-    height: "42px",
-    borderRadius: "50%",
-    border: "1px solid #CBD5E1",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: "6px",
-    backgroundColor: "#FFFFFF",
-  },
-  featureTitle: {
+  statNumber: {
     fontFamily: "Georgia, serif",
-    fontSize: "22px",
+    fontSize: "36px",
+    color: "#0F172A",
+  },
+  adminTitle: {
+    fontFamily: "Georgia, serif",
+    fontSize: "36px",
     fontWeight: "normal",
     color: "#0F172A",
-    margin: 0,
+    margin: "8px 0 20px 0",
   },
-  featureText: {
+  tabsContainer: {
+    display: "flex",
+    gap: "24px",
+    borderBottom: "1px solid #E2E8F0",
+    marginBottom: "15px",
+  },
+  tabButton: {
+    background: "none",
+    border: "none",
+    padding: "10px 0",
+    fontSize: "15px",
+    cursor: "pointer",
+  },
+  memberRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "12px 0",
+    borderBottom: "1px solid #F1F5F9",
+  },
+  revokeBtn: {
+    background: "none",
+    border: "none",
+    color: "#C2410C",
     fontSize: "14px",
-    lineHeight: "1.6",
-    color: "#64748B",
-    margin: 0,
+    cursor: "pointer",
+    fontWeight: "500",
+  },
+  approveBtn: {
+    background: "none",
+    border: "none",
+    color: "#15803D",
+    fontSize: "14px",
+    cursor: "pointer",
+    fontWeight: "500",
   },
   modalOverlay: {
     position: "fixed",
