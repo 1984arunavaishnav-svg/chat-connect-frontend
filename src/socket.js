@@ -1,7 +1,6 @@
 import { io } from "socket.io-client";
 
-// Yahan apna Render/Railway ka backend URL rakhein (e.g. https://chat-backend.onrender.com)
-const BACKEND_URL = "http://localhost:5000"; 
+const BACKEND_URL = "https://chat-connect-frontend-s5tp.onrender.com";
 
 export const socket = io(BACKEND_URL, {
   autoConnect: false,
