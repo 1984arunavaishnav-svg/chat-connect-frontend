@@ -1,0 +1,44 @@
+import React from "react";
+
+export default function Pending({ onBack }) {
+  return (
+    <div style={styles.modalOverlay}>
+      <div style={styles.modalCard}>
+        <div style={{ textAlign: "center", padding: "10px 0" }}>
+          <div style={styles.iconCircle}>⏳</div>
+          <h2 style={styles.title}>Approval Pending</h2>
+          <p style={styles.text}>
+            Your account request has been successfully submitted. An administrator will review and grant access shortly.
+          </p>
+          <button style={styles.primaryBtn} onClick={onBack}>
+            Return to Home
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const styles = {
+  modalOverlay: {
+    position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: "rgba(5, 7, 12, 0.8)", backdropFilter: "blur(12px)",
+    display: "flex", justifyContent: "center", alignItems: "center", zIndex: 1000, padding: "16px",
+  },
+  modalCard: {
+    backgroundColor: "#131825", borderRadius: "24px", padding: "40px 32px", width: "100%", maxWidth: "400px",
+    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.7)", border: "1px solid #1E293B", boxSizing: "border-box",
+  },
+  iconCircle: {
+    width: "64px", height: "64px", borderRadius: "20px", backgroundColor: "rgba(99, 102, 241, 0.1)",
+    border: "1px solid rgba(99, 102, 241, 0.2)", display: "flex", alignItems: "center", justifyContent: "center",
+    fontSize: "28px", margin: "0 auto 20px auto",
+  },
+  title: { fontSize: "22px", fontWeight: "700", color: "#F8FAFC", margin: "0 0 10px 0" },
+  text: { color: "#94A3B8", fontSize: "14px", lineHeight: "1.6", margin: "0 0 24px 0" },
+  primaryBtn: {
+    width: "100%", padding: "14px", background: "linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)",
+    color: "#FFF", border: "none", borderRadius: "12px", fontWeight: "600", fontSize: "15px", cursor: "pointer",
+    boxShadow: "0 4px 12px rgba(99, 102, 241, 0.4)",
+  },
+};
