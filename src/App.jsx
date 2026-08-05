@@ -1,18 +1,11 @@
-import React from 'react';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import Signup from './pages/Signup';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
+import React from "react";
+import Chat from "./Chat";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-    </Router>
+    <div style={{ backgroundColor: "#f0f2f5", minHeight: "100vh", padding: "10px" }}>
+      <Chat username="User1" />
+    </div>
   );
 }
 
