@@ -1,0 +1,66 @@
+import React from "react";
+
+export default function Profile({ username, email, onBackToChat }) {
+  return (
+    <div style={styles.pageWrapper}>
+      <header style={styles.header}>
+        <div style={styles.logo}>Conection<span style={{color: "#6366F1"}}>.</span></div>
+        <button onClick={onBackToChat} style={styles.outlineBtn}>← Back to Chat</button>
+      </header>
+
+      <main style={styles.mainContainer}>
+        <div style={styles.card}>
+          <div style={styles.avatarLarge}>
+            {username ? username.substring(0, 2).toUpperCase() : "U"}
+          </div>
+          <h2 style={styles.nameHeading}>{username || "Member"}</h2>
+          <p style={styles.emailText}>{email || "member@conection.com"}</p>
+
+          <div style={styles.infoBox}>
+            <div style={styles.infoRow}>
+              <span style={styles.infoLabel}>Account Status</span>
+              <span style={styles.statusBadge}>Active Member</span>
+            </div>
+            <div style={styles.infoRow}>
+              <span style={styles.infoLabel}>Room Access</span>
+              <span style={{ color: "#34D399", fontWeight: "600" }}>Granted</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+const styles = {
+  pageWrapper: {
+    backgroundColor: "#090A0F", minHeight: "100vh", fontFamily: "Inter, system-ui, sans-serif", color: "#F8FAFC", paddingBottom: "80px",
+  },
+  header: {
+    display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 32px", maxWidth: "800px", margin: "0 auto", borderBottom: "1px solid #1E293B", boxSizing: "border-box",
+  },
+  logo: { fontSize: "20px", fontWeight: "800", color: "#F8FAFC", letterSpacing: "-0.5px" },
+  outlineBtn: {
+    padding: "8px 16px", backgroundColor: "#131825", border: "1px solid #334155", borderRadius: "10px", cursor: "pointer", fontSize: "13px", color: "#F8FAFC", fontWeight: "500",
+  },
+  mainContainer: { maxWidth: "480px", margin: "40px auto", padding: "0 16px", boxSizing: "border-box" },
+  card: {
+    backgroundColor: "#131825", borderRadius: "24px", padding: "36px", textAlign: "center", boxShadow: "0 25px 50px -12px rgba(0,0,0,0.7)", border: "1px solid #1E293B",
+  },
+  avatarLarge: {
+    width: "80px", height: "80px", borderRadius: "24px", background: "linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)",
+    color: "#FFF", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "700", fontSize: "24px", margin: "0 auto 20px",
+    boxShadow: "0 8px 20px rgba(99, 102, 241, 0.4)",
+  },
+  nameHeading: { fontSize: "22px", fontWeight: "700", color: "#F8FAFC", margin: "0 0 4px 0" },
+  emailText: { color: "#94A3B8", fontSize: "14px", marginBottom: "28px" },
+  infoBox: {
+    borderTop: "1px solid #1E293B", paddingTop: "20px", display: "flex", flexDirection: "column", gap: "16px", textAlign: "left",
+  },
+  infoRow: { display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "14px" },
+  infoLabel: { color: "#94A3B8" },
+  statusBadge: {
+    backgroundColor: "rgba(52, 211, 153, 0.1)", color: "#34D399", border: "1px solid rgba(52, 211, 153, 0.2)",
+    padding: "4px 10px", borderRadius: "8px", fontSize: "12px", fontWeight: "600",
+  },
+};
