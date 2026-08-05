@@ -47,7 +47,7 @@ export default function App() {
       }
     } catch (err) {
       setIsLoading(false);
-      // Fallback if backend auth endpoint isn't fully ready
+      // Fallback
       setCurrentUser(formData.username || "User");
       setView("chat");
     }
@@ -55,12 +55,12 @@ export default function App() {
 
   if (view === "chat") {
     return (
-      <div style={{ backgroundColor: "#FAF8F5", minHeight: "100vh", padding: "10px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", maxWidth: "500px", margin: "0 auto 10px" }}>
-          <span style={{ fontFamily: "Georgia, serif", fontSize: "20px", fontWeight: "bold", color: "#0F172A" }}>Conection.</span>
+      <div style={{ backgroundColor: "#FAF8F5", minHeight: "100vh", padding: "20px 10px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", maxWidth: "600px", margin: "0 auto 15px" }}>
+          <span style={{ fontFamily: "Georgia, serif", fontSize: "22px", fontWeight: "bold", color: "#0F172A" }}>Conection.</span>
           <button 
             onClick={() => setView("landing")} 
-            style={{ padding: "6px 14px", backgroundColor: "#0F172A", color: "#fff", border: "none", borderRadius: "20px", cursor: "pointer", fontSize: "12px" }}
+            style={{ padding: "8px 18px", backgroundColor: "#0F172A", color: "#fff", border: "none", borderRadius: "20px", cursor: "pointer", fontSize: "13px", fontWeight: "500" }}
           >
             Logout
           </button>
@@ -85,7 +85,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* Login / Signup / Pending Modal Overlay */}
+      {/* Login / Signup / Pending Modal */}
       {(view === "login" || view === "signup" || view === "pending") && (
         <div style={styles.modalOverlay}>
           <div style={styles.modalCard}>
@@ -93,7 +93,7 @@ export default function App() {
             
             {view === "pending" ? (
               <div style={{ textAlign: "center", padding: "10px 0" }}>
-                <div style={{ fontSize: "36px", marginBottom: "10px" }}>⏳</div>
+                <div style={{ fontSize: "40px", marginBottom: "10px" }}>⏳</div>
                 <h2 style={styles.serifHeading}>Account Pending</h2>
                 <p style={{ color: "#64748B", fontSize: "14px", lineHeight: "1.5", margin: "15px 0" }}>
                   Aapka account successfully submit ho gaya hai! Admin approval ke baad aap login kar sakte hain.
@@ -147,7 +147,7 @@ export default function App() {
                   {isLoading ? "Processing..." : view === "signup" ? "Submit Request" : "Sign In"}
                 </button>
 
-                <div style={{ marginTop: "15px", textAlign: "center", fontSize: "13px", color: "#64748B" }}>
+                <div style={{ marginTop: "18px", textAlign: "center", fontSize: "13px", color: "#64748B" }}>
                   {view === "signup" ? (
                     <span>
                       Already have an account?{" "}
@@ -170,48 +170,55 @@ export default function App() {
         </div>
       )}
 
-      {/* Main Landing Content */}
+      {/* Main Responsive Landing Section */}
       <main style={styles.mainContent}>
-        <div style={styles.subTag}>A QUIETER PLACE TO CHAT</div>
-        
-        <h1 style={styles.mainTitle}>
-          Conversations,<br />
-          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>unhurried.</span>
-        </h1>
+        <div style={styles.heroGrid}>
+          {/* Left Column: Heading & CTAs */}
+          <div style={styles.heroTextContainer}>
+            <div style={styles.subTag}>A QUIETER PLACE TO CHAT</div>
+            
+            <h1 style={styles.mainTitle}>
+              Conversations,<br />
+              <span style={{ fontStyle: "italic", fontWeight: "normal" }}>unhurried.</span>
+            </h1>
 
-        <p style={styles.description}>
-          A private, invite-controlled chat room for the people who matter. No noise, no ads, no algorithms — just plain, honest messages that feel like reading a letter.
-        </p>
+            <p style={styles.description}>
+              A private, invite-controlled chat room for the people who matter. No noise, no ads, no algorithms — just plain, honest messages that feel like reading a letter.
+            </p>
 
-        <div style={styles.ctaGroup}>
-          <button style={styles.primaryBtnLarge} onClick={() => { setMessage(""); setView("signup"); }}>
-            Request an account &nbsp; →
-          </button>
-          
-          <button style={styles.textLinkBtn} onClick={() => { setMessage(""); setView("login"); }}>
-            I already have one
-          </button>
-        </div>
-
-        {/* Dynamic Chat Preview Card */}
-        <div style={styles.previewCard}>
-          <div style={styles.chatHeader}>
-            <div style={styles.avatar}>AS</div>
-            <div>
-              <div style={{ fontWeight: "600", fontSize: "15px", color: "#0F172A" }}>Ananya S.</div>
-              <div style={{ fontSize: "12px", color: "#16A34A" }}>online now</div>
+            <div style={styles.ctaGroup}>
+              <button style={styles.primaryBtnLarge} onClick={() => { setMessage(""); setView("signup"); }}>
+                Request an account &nbsp; →
+              </button>
+              
+              <button style={styles.textLinkBtn} onClick={() => { setMessage(""); setView("login"); }}>
+                I already have one
+              </button>
             </div>
           </div>
 
-          <div style={styles.chatBody}>
-            <div style={styles.msgLeft}>Kal shaam free ho?</div>
-            <div style={styles.msgRight}>Bilkul. Coffee ke liye milte hain.</div>
-            <div style={styles.msgLeft}>6 baje?</div>
+          {/* Right Column: Interactive Preview Card */}
+          <div style={styles.heroCardContainer}>
+            <div style={styles.previewCard}>
+              <div style={styles.chatHeader}>
+                <div style={styles.avatar}>AS</div>
+                <div>
+                  <div style={{ fontWeight: "600", fontSize: "15px", color: "#0F172A" }}>Ananya S.</div>
+                  <div style={{ fontSize: "12px", color: "#16A34A", fontWeight: "500" }}>online now</div>
+                </div>
+              </div>
+
+              <div style={styles.chatBody}>
+                <div style={styles.msgLeft}>Kal shaam free ho?</div>
+                <div style={styles.msgRight}>Bilkul. Coffee ke liye milte hain.</div>
+                <div style={styles.msgLeft}>6 baje?</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Features List */}
-        <div style={styles.featuresList}>
+        {/* Features Grid (Horizontal on Laptop, Stacked on Mobile) */}
+        <div style={styles.featuresGrid}>
           <div style={styles.featureItem}>
             <div style={styles.iconBox}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -253,19 +260,19 @@ const styles = {
     minHeight: "100vh",
     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
     color: "#1E293B",
-    paddingBottom: "60px",
+    paddingBottom: "80px",
   },
   navbar: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "20px 24px",
-    maxWidth: "800px",
+    padding: "24px 32px",
+    maxWidth: "1100px",
     margin: "0 auto",
   },
   logo: {
     fontFamily: "Georgia, serif",
-    fontSize: "24px",
+    fontSize: "26px",
     fontWeight: "bold",
     color: "#0F172A",
     cursor: "pointer",
@@ -273,30 +280,48 @@ const styles = {
   navLinks: {
     display: "flex",
     alignItems: "center",
-    gap: "16px",
+    gap: "20px",
   },
   textBtn: {
     background: "none",
     border: "none",
     color: "#334155",
-    fontSize: "14px",
+    fontSize: "15px",
     cursor: "pointer",
     padding: "8px 12px",
+    fontWeight: "500",
   },
   primaryBtnSmall: {
     backgroundColor: "#0F172A",
     color: "#FFFFFF",
     border: "none",
     borderRadius: "20px",
-    padding: "8px 18px",
+    padding: "10px 22px",
     fontSize: "14px",
     fontWeight: "500",
     cursor: "pointer",
   },
   mainContent: {
-    maxWidth: "480px",
-    margin: "30px auto 0",
-    padding: "0 20px",
+    maxWidth: "1100px",
+    margin: "40px auto 0",
+    padding: "0 24px",
+  },
+  heroGrid: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: "40px",
+    marginBottom: "80px",
+  },
+  heroTextContainer: {
+    flex: "1 1 480px",
+    maxWidth: "560px",
+  },
+  heroCardContainer: {
+    flex: "1 1 380px",
+    maxWidth: "440px",
+    width: "100%",
   },
   subTag: {
     fontSize: "11px",
@@ -311,34 +336,34 @@ const styles = {
   },
   mainTitle: {
     fontFamily: "Georgia, serif",
-    fontSize: "42px",
+    fontSize: "48px",
     lineHeight: "1.15",
     fontWeight: "normal",
     color: "#0F172A",
-    margin: "0 0 20px 0",
+    margin: "0 0 24px 0",
   },
   description: {
-    fontSize: "16px",
+    fontSize: "17px",
     lineHeight: "1.6",
     color: "#475569",
-    margin: "0 0 30px 0",
+    margin: "0 0 36px 0",
   },
   ctaGroup: {
     display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-    marginBottom: "40px",
+    alignItems: "center",
+    gap: "24px",
+    flexWrap: "wrap",
   },
   primaryBtnLarge: {
     backgroundColor: "#0F172A",
     color: "#FFFFFF",
     border: "none",
     borderRadius: "30px",
-    padding: "16px 24px",
+    padding: "16px 28px",
     fontSize: "16px",
     fontWeight: "500",
     cursor: "pointer",
-    display: "flex",
+    display: "inline-flex",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -348,28 +373,28 @@ const styles = {
     color: "#0F172A",
     fontSize: "15px",
     cursor: "pointer",
-    textAlign: "left",
     padding: "5px 0",
+    textDecoration: "underline",
+    fontWeight: "500",
   },
   previewCard: {
     backgroundColor: "#FFFFFF",
-    borderRadius: "16px",
-    padding: "20px",
-    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02)",
+    borderRadius: "20px",
+    padding: "24px",
+    boxShadow: "0 20px 30px -10px rgba(0, 0, 0, 0.07), 0 10px 15px -5px rgba(0, 0, 0, 0.03)",
     border: "1px solid #F1F5F9",
-    marginBottom: "50px",
   },
   chatHeader: {
     display: "flex",
     alignItems: "center",
-    gap: "12px",
-    paddingBottom: "15px",
+    gap: "14px",
+    paddingBottom: "18px",
     borderBottom: "1px solid #F1F5F9",
-    marginBottom: "15px",
+    marginBottom: "18px",
   },
   avatar: {
-    width: "40px",
-    height: "40px",
+    width: "44px",
+    height: "44px",
     borderRadius: "50%",
     backgroundColor: "#0F172A",
     color: "#FFF",
@@ -377,18 +402,18 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     fontWeight: "bold",
-    fontSize: "14px",
+    fontSize: "15px",
   },
   chatBody: {
     display: "flex",
     flexDirection: "column",
-    gap: "10px",
+    gap: "12px",
   },
   msgLeft: {
     backgroundColor: "#F1F5F9",
     color: "#1E293B",
-    padding: "10px 16px",
-    borderRadius: "16px",
+    padding: "12px 18px",
+    borderRadius: "18px",
     borderBottomLeftRadius: "4px",
     alignSelf: "flex-start",
     maxWidth: "80%",
@@ -397,45 +422,48 @@ const styles = {
   msgRight: {
     backgroundColor: "#0F172A",
     color: "#FFFFFF",
-    padding: "10px 16px",
-    borderRadius: "16px",
+    padding: "12px 18px",
+    borderRadius: "18px",
     borderBottomRightRadius: "4px",
     alignSelf: "flex-end",
     maxWidth: "80%",
     fontSize: "14px",
   },
-  featuresList: {
+  featuresGrid: {
     display: "flex",
-    flexDirection: "column",
-    gap: "30px",
-    paddingTop: "20px",
+    flexWrap: "wrap",
+    gap: "40px",
+    borderTop: "1px solid #E2E8F0",
+    paddingTop: "60px",
+    justifyContent: "space-between",
   },
   featureItem: {
+    flex: "1 1 280px",
     display: "flex",
     flexDirection: "column",
-    gap: "8px",
+    gap: "10px",
   },
   iconBox: {
-    width: "40px",
-    height: "40px",
+    width: "42px",
+    height: "42px",
     borderRadius: "50%",
-    border: "1px solid #E2E8F0",
+    border: "1px solid #CBD5E1",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: "4px",
+    marginBottom: "6px",
     backgroundColor: "#FFFFFF",
   },
   featureTitle: {
     fontFamily: "Georgia, serif",
-    fontSize: "20px",
+    fontSize: "22px",
     fontWeight: "normal",
     color: "#0F172A",
     margin: 0,
   },
   featureText: {
     fontSize: "14px",
-    lineHeight: "1.5",
+    lineHeight: "1.6",
     color: "#64748B",
     margin: 0,
   },
@@ -445,8 +473,8 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(15, 23, 42, 0.4)",
-    backdropFilter: "blur(4px)",
+    backgroundColor: "rgba(15, 23, 42, 0.45)",
+    backdropFilter: "blur(6px)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -455,35 +483,35 @@ const styles = {
   },
   modalCard: {
     backgroundColor: "#FFFFFF",
-    borderRadius: "16px",
-    padding: "30px",
+    borderRadius: "20px",
+    padding: "36px",
     width: "100%",
-    maxWidth: "360px",
+    maxWidth: "400px",
     position: "relative",
-    boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+    boxShadow: "0 25px 30px -5px rgba(0, 0, 0, 0.15)",
   },
   closeBtn: {
     position: "absolute",
-    top: "15px",
-    right: "15px",
+    top: "18px",
+    right: "18px",
     background: "none",
     border: "none",
-    fontSize: "18px",
+    fontSize: "20px",
     cursor: "pointer",
     color: "#64748B",
   },
   serifHeading: {
     fontFamily: "Georgia, serif",
-    fontSize: "24px",
+    fontSize: "26px",
     fontWeight: "normal",
     color: "#0F172A",
-    margin: "0 0 6px 0",
+    margin: "0 0 8px 0",
   },
   input: {
     width: "100%",
-    padding: "12px",
-    marginBottom: "12px",
-    borderRadius: "8px",
+    padding: "14px",
+    marginBottom: "14px",
+    borderRadius: "10px",
     border: "1px solid #CBD5E1",
     boxSizing: "border-box",
     fontSize: "14px",
@@ -491,11 +519,11 @@ const styles = {
   },
   primaryBtnFull: {
     width: "100%",
-    padding: "12px",
+    padding: "14px",
     backgroundColor: "#0F172A",
     color: "#FFF",
     border: "none",
-    borderRadius: "8px",
+    borderRadius: "10px",
     fontWeight: "500",
     fontSize: "15px",
     cursor: "pointer",
@@ -504,6 +532,6 @@ const styles = {
   errorMsg: {
     color: "#DC2626",
     fontSize: "13px",
-    marginBottom: "12px",
+    marginBottom: "14px",
   },
 };
